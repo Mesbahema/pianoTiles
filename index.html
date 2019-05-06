@@ -39,12 +39,15 @@
             },
 
             create: function () {
+                this.start = false;
                 this.vertical = 0;
                 this.whiteTiles = game.add.group();
                 this.blackTiles = game.add.group();
                 this.tileSpeed = 0;
                 this.horizontal = 0;
                 this.counter = 0;
+                this.freezeCheck = 0;
+                this.isFreezed = true;
                 this.currentTile = 0;
                 for (i = yrec; i >= 0; i--) {
                     for (j = 0; j < xrec; j++) {
@@ -71,57 +74,38 @@
                     blackRectangle.endFill();
                     this.blackTiles.add(blackRectangle);
                     if (i === 3) {
-                        this.lose = game.add.button(0, 510, 'tileW', this.taploos, this, 6, 4, 6, 4);
+                        this.lose = game.add.button(0, 510, 'tileW', this.taplose, this, 6, 4, 6, 4);
                         this.control = game.add.button(rand * 100, 510, 'tile', this.tap, this, 6, 4, 6, 4);
                     }
                 }
-                //this.menu = game.add.graphics(0, 0);
-                //this.menu.beginFill(0xCFB53B);
-                //this.menu.lineStyle(0.5, 0x000000, 1);
-                //this.menu.moveTo(0, 0);
-                //this.menu.lineTo(100, 0);
-                //this.menu.lineTo(100, 170);
-                //this.menu.lineTo(0, 170);
-                //this.menu.endFill();
-                //this.menu.inputEnabled = true;
-                //this.menu.events.onInputDown.add(function(){
-                //    console.log("Hello");
-                //});
-
-                //game.input.touch.enabled = false;
-                //game.onInputDown.add(this.onDown, this);
+                this.lose.alpha = 0;
+                this.control.alpha = 0;
             },
             update: function () {
                 this.whiteTiles.forEach(this.setSpeed, this, true);
                 this.blackTiles.forEach(this.setSpeed, this, true);
                 this.whiteTiles.forEach(this.checkWhiteTile, this, true);
                 this.blackTiles.forEach(this.checkTile, this, true);
-                //this.blackTiles.forEach(this.checkBotton, this, true);
                 this.lose.y += this.tileSpeed;
                 this.control.y += this.tileSpeed;
+                this.blackTiles.forEach(this.freeze, this, true);
+                if (this.tileSpeed != 0) {
+                    this.isFreezed = false;
+                }
 
             },
-            // checkBotton: function (tile) {
-            //     if (tile.y + tile.height >= game.height && !this.tileSpeed) {
-            //         this.control.y = tile.y;
-            //         this.control.x = tile.x;
-            //         this.loos.y = tile.y;
-            //     } else if (this.tileSpeed) {
-            //         this.control.y = tile.y - 170;
-            //         this.control.x = tile.x;
-            //         this.loos.y = tile.y - 170;
-            //     }
-            // },
             tap: function () {
                 console.log('go on!');
+                this.freezeCheck++;
+                //console.log(this.freezeCheck);
                 this.currentTile++;
                 this.counter = 0;
-                this.tileSpeed = 1.7;
+                this.tileSpeed = 17;
                 this.blackTiles.forEach(this.search, this, true);
                 console.log(this.counter);
                 console.log(this.currentTile);
                 for (j = 0; j < xrec; j++) {
-                    var rectangle = game.add.graphics(j * 100, this.vertical-170);
+                    var rectangle = game.add.graphics(j * 100, this.vertical - 170);
                     rectangle.beginFill(0xffffff);
                     rectangle.lineStyle(0.5, 0x000000, 1);
                     rectangle.moveTo(0, 0);
@@ -132,7 +116,7 @@
                     this.whiteTiles.add(rectangle);
                 }
                 var rand = Math.floor(Math.random() * 4),
-                    blackRectangle = game.add.graphics(rand * 100, this.vertical-170);
+                    blackRectangle = game.add.graphics(rand * 100, this.vertical - 170);
                 blackRectangle.beginFill(0x000000);
                 blackRectangle.lineStyle(0.5, 0x000000, 1);
                 blackRectangle.moveTo(0, 0);
@@ -148,30 +132,47 @@
             },
             search: function (tile) {
                 this.vertical = tile.y;
-                
+
                 if (this.counter === this.currentTile + 1) {
                     this.horizontal = tile.x;
                 }
 
                 this.counter++;
             },
-            taploos: function () {
+            taplose: function () {
                 console.log('game over');
+            },
+            freeze: function (tile) {
+                if (tile.y === game.height) {
+                    if (this.freezeCheck > 0) {
+                        if (!this.isFreezed) {
+                            this.freezeCheck--;
+                            console.log('hello');
+                            this.isFreezed = true;
+                        }
+                        //console.log(this.isFreezed)
+                    }
+                    //console.log(this.freezeCheck);
+                    if (this.freezeCheck === 0) {
+                        this.tileSpeed = 0;
+                    }
+                }
             },
             setSpeed: function (tile) {
                 tile.y += this.tileSpeed;
             },
             checkTile: function (tile) {
-                if (tile.y  > game.height) {
+                if (tile.y > game.height) {
                     this.currentTile--;
                     tile.destroy();
                 }
             },
             checkWhiteTile: function (tile) {
-                if (tile.y  > game.height) {
+                if (tile.y > game.height) {
                     tile.destroy();
                 }
             },
+
         };
         game = new Phaser.Game(400, 680, Phaser.CANVAS, 'gameDiv');
         game.state.add('mainstate', mainState);
