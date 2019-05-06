@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>pianoTiles</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.3/custom/phaser-arcade-physics.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            position: relative;
+            margin: auto;
+            right: 0;
+            /* transform: scaleX(1.5); */
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        var xrec = 4,
+            yrec = 4;
+        var mainState = {
+            preload: function () {
+                game.load.image('tile', '/tile.png');
+                game.load.image('tileW', '/tileW.png');
+            },
+
+            create: function () {
+                this.whiteTiles = game.add.group();
+                this.blackTiles = game.add.group();
+                this.tileSpeed = 0;
+                for (i = 0; i < yrec; i++) {
+                    for (j = 0; j < xrec; j++) {
+                        var rectangle = game.add.graphics(j * 100, i * 170);
+                        rectangle.beginFill(0xffffff);
+                        rectangle.lineStyle(0.5, 0x000000, 1);
+                        rectangle.moveTo(0, 0);
+                        rectangle.lineTo(100, 0);
+                        rectangle.lineTo(100, 170);
+                        rectangle.lineTo(0, 170);
+                        rectangle.endFill();
+                        this.whiteTiles.add(rectangle);
+                    }
+
+
+                    var rand = Math.floor(Math.random() * 4),
+                        blackRectangle = game.add.graphics(rand * 100, i * 170);
+                    blackRectangle.beginFill(0x000000);
+                    blackRectangle.lineStyle(0.5, 0x000000, 1);
+                    blackRectangle.moveTo(0, 0);
+                    blackRectangle.lineTo(100, 0);
+                    blackRectangle.lineTo(100, 170);
+                    blackRectangle.lineTo(0, 170);
+                    blackRectangle.endFill();
+                    this.blackTiles.add(blackRectangle);
+                    if (i === 3) {
+                        this.lose = game.add.button(0, 510, 'tileW', this.taploos, this, 6, 4, 6, 4);
+                        this.control = game.add.button(rand * 100, 510, 'tile', this.tap, this, 6, 4, 6, 4);
+                    }
+                }
+                //this.menu = game.add.graphics(0, 0);
+                //this.menu.beginFill(0xCFB53B);
+                //this.menu.lineStyle(0.5, 0x000000, 1);
+                //this.menu.moveTo(0, 0);
+                //this.menu.lineTo(100, 0);
+                //this.menu.lineTo(100, 170);
+                //this.menu.lineTo(0, 170);
+                //this.menu.endFill();
+                //this.menu.inputEnabled = true;
+                //this.menu.events.onInputDown.add(function(){
+                //    console.log("Hello");
+                //});
+
+                //game.input.touch.enabled = false;
+                //game.onInputDown.add(this.onDown, this);
+            },
+            update: function () {
+                this.whiteTiles.forEach(this.setSpeed, this, true);
+                this.blackTiles.forEach(this.setSpeed, this, true);
+                //this.blackTiles.forEach(this.checkBotton, this, true);
+                this.lose.y += this.tileSpeed;
+                this.control.y += this.tileSpeed;
+            },
+            // checkBotton: function (tile) {
+            //     if (tile.y + tile.height >= game.height && !this.tileSpeed) {
+            //         this.control.y = tile.y;
+            //         this.control.x = tile.x;
+            //         this.loos.y = tile.y;
+            //     } else if (this.tileSpeed) {
+            //         this.control.y = tile.y - 170;
+            //         this.control.x = tile.x;
+            //         this.loos.y = tile.y - 170;
+            //     }
+            // },
+            tap: function () {
+                console.log('go on!');
+                this.tileSpeed = 1;
+                for (j = 0; j < xrec; j++) {
+                    var rectangle = game.add.graphics(j * 100, -170);
+                    rectangle.beginFill(0xffffff);
+                    rectangle.lineStyle(0.5, 0x000000, 1);
+                    rectangle.moveTo(0, 0);
+                    rectangle.lineTo(100, 0);
+                    rectangle.lineTo(100, 170);
+                    rectangle.lineTo(0, 170);
+                    rectangle.endFill();
+                    this.whiteTiles.add(rectangle);
+                }
+                var rand = Math.floor(Math.random() * 4),
+                    blackRectangle = game.add.graphics(rand * 100, -170);
+                blackRectangle.beginFill(0x000000);
+                blackRectangle.lineStyle(0.5, 0x000000, 1);
+                blackRectangle.moveTo(0, 0);
+                blackRectangle.lineTo(100, 0);
+                blackRectangle.lineTo(100, 170);
+                blackRectangle.lineTo(0, 170);
+                blackRectangle.endFill();
+                this.blackTiles.add(blackRectangle);
+
+                this.lose.y -= 170;
+                this.control.x = rand * 100;
+                this.control.y -= 170;
+            },
+            taploos: function () {
+                console.log('game over');
+            },
+            setSpeed: function (tile) {
+                tile.y += this.tileSpeed;
+            }
+        };
+        game = new Phaser.Game(400, 680, Phaser.CANVAS, 'gameDiv');
+        game.state.add('mainstate', mainState);
+        game.state.start('mainstate');
+
+        /***********************************************************************************************/
+    </script>
+</body>
+
+</html>
