@@ -23,7 +23,6 @@
             position: relative;
             margin: auto;
             right: 0;
-            /* transform: scaleX(1.5); */
         }
     </style>
 </head>
@@ -33,48 +32,63 @@
         var xrec = 4,
             yrec = 4,
             odeToJoy = ['E4', 'E4', 'F4', 'G4',
-                        'G4', 'F4', 'E4', 'D4',
-                        'C4', 'C4', 'D4', 'E4',
-                        'E4', 'D4', 'D4',
-                        'E4', 'E4', 'F4', 'G4',
-                        'G4', 'F4', 'E4', 'D4',
-                        'C4', 'C4', 'D4', 'E4',
-                        'E4', 'D4', 'D4',
-                        'D4', 'D4', 'E4', 'C4',
-                        'D4', 'E4', 'F4', 'E4', 'C4',
-                        'D4', 'E4', 'F4', 'E4', 'C4',
-                        'C4', 'D4',
-                        'E4', 'E4', 'F4', 'G4',
-                        'G4', 'F4', 'E4', 'D4',
-                        'C4', 'C4', 'D4', 'E4',
-                        'E4', 'D4', 'D4',
-                        'E4', 'E4', 'F4', 'G4',
-                        'G4', 'F4', 'E4', 'D4',
-                        'C4', 'C4', 'D4', 'E4',
-                        'D4', 'C4','C4'];
+                'G4', 'F4', 'E4', 'D4',
+                'C4', 'C4', 'D4', 'E4',
+                'E4', 'D4', 'D4',
+                'E4', 'E4', 'F4', 'G4',
+                'G4', 'F4', 'E4', 'D4',
+                'C4', 'C4', 'D4', 'E4',
+                'E4', 'D4', 'D4',
+                'D4', 'D4', 'E4', 'C4',
+                'D4', 'E4', 'F4', 'E4', 'C4',
+                'D4', 'E4', 'F4', 'E4', 'C4',
+                'C4', 'D4',
+                'E4', 'E4', 'F4', 'G4',
+                'G4', 'F4', 'E4', 'D4',
+                'C4', 'C4', 'D4', 'E4',
+                'E4', 'D4', 'D4',
+                'E4', 'E4', 'F4', 'G4',
+                'G4', 'F4', 'E4', 'D4',
+                'C4', 'C4', 'D4', 'E4',
+                'D4', 'C4', 'C4'];
         var mainState = {
             preload: function () {
                 game.load.image('tile', 'tile.png');
-                game.load.image('tileW', 'tileW.png');
+                game.load.image('grayTile', 'grayTile.png');
+                game.load.image('redTile', 'redTile.png');
+                game.load.audio('false', 'false.ogg');
                 game.load.audio('C4', 'C4.ogg');
                 game.load.audio('D4', 'D4.ogg');
                 game.load.audio('E4', 'E4.ogg');
                 game.load.audio('F4', 'F4.ogg');
                 game.load.audio('G4', 'G4.ogg');
-                
+
             },
 
             create: function () {
+                this.game_over = false;
                 this.start = false;
                 this.vertical = 0;
+                this.background = game.add.graphics(0, 0);
+                this.background.beginFill(0x08fb03);
+                //this.background.lineStyle(0.5, 0x000000, 1);
+                this.background.moveTo(0, 0);
+                this.background.lineTo(400, 0);
+                this.background.lineTo(400, 680);
+                this.background.lineTo(0, 680);
+                this.background.endFill();
                 this.whiteTiles = game.add.group();
+                this.redTiles = game.add.group();
                 this.blackTiles = game.add.group();
+                this.grayTiles = game.add.group();
                 this.tileSpeed = 0;
                 this.horizontal = 0;
                 this.counter = 0;
                 this.freezeCheck = 0;
                 this.isFreezed = true;
                 this.currentTile = 0;
+                this.sound = game.add.audio('E4');
+                this.false = game.add.audio('false');
                 for (i = yrec; i >= 0; i--) {
                     for (j = 0; j < xrec; j++) {
                         var rectangle = game.add.graphics(j * 100, i * 170);
@@ -86,6 +100,9 @@
                         rectangle.lineTo(0, 170);
                         rectangle.endFill();
                         this.whiteTiles.add(rectangle);
+
+
+
                     }
 
 
@@ -100,69 +117,87 @@
                     blackRectangle.endFill();
                     this.blackTiles.add(blackRectangle);
                     if (i === 3) {
-                        this.lose = game.add.button(0, 510, 'tileW', this.taplose, this, 6, 4, 6, 4);
                         this.control = game.add.button(rand * 100, 510, 'tile', this.tap, this, 6, 4, 6, 4);
                     }
                     this.noteCounter = 0;
-                    this.sound = game.add.audio('E4');
                 }
-                this.lose.alpha = 0;
+                this.redTile1 = game.add.button(0, 510, 'redTile', this.taplose1, this, 6, 4, 6, 4);
+                this.redTile2 = game.add.button(100, 510, 'redTile', this.taplose2, this, 6, 4, 6, 4);
+                this.redTile3 = game.add.button(200, 510, 'redTile', this.taplose3, this, 6, 4, 6, 4);
+                this.redTile4 = game.add.button(300, 510, 'redTile', this.taplose4, this, 6, 4, 6, 4);
+                this.redTiles.add(this.redTile1);
+                this.redTiles.add(this.redTile2);
+                this.redTiles.add(this.redTile3);
+                this.redTiles.add(this.redTile4);
+                this.redTile1.alpha = 0;
+                this.redTile2.alpha = 0;
+                this.redTile3.alpha = 0;
+                this.redTile4.alpha = 0;
                 this.control.alpha = 0;
             },
             update: function () {
-                this.whiteTiles.forEach(this.setSpeed, this, true);
-                this.blackTiles.forEach(this.setSpeed, this, true);
-                this.whiteTiles.forEach(this.checkWhiteTile, this, true);
-                this.blackTiles.forEach(this.checkTile, this, true);
-                this.lose.y += this.tileSpeed;
-                this.control.y += this.tileSpeed;
-                this.blackTiles.forEach(this.freeze, this, true);
-                if (this.tileSpeed != 0) {
-                    this.isFreezed = false;
+                if (!this.game_over) {
+                    this.whiteTiles.forEach(this.setSpeed, this, true);
+                    this.blackTiles.forEach(this.setSpeed, this, true);
+                    this.redTiles.forEach(this.setSpeed, this, true);
+                    this.grayTiles.forEach(this.setSpeed, this, true);
+                    this.whiteTiles.forEach(this.checkWhiteTile, this, true);
+                    this.blackTiles.forEach(this.checkTile, this, true);
+                    this.control.y += this.tileSpeed;
+                    this.blackTiles.forEach(this.freeze, this, true);
+                    if (this.tileSpeed != 0) {
+                        this.isFreezed = false;
+                    }
                 }
-
             },
             tap: function () {
-                console.log('go on!');
-                this.sound.stop();
-                this.freezeCheck++;
-                this.sound = game.add.audio(odeToJoy[this.noteCounter]);
-                this.sound.play();
-                this.noteCounter++;
-                if (this.noteCounter === odeToJoy.length) {
-                    this.noteCounter = 0;
+                if (!this.game_over) {
+                    console.log('go on!');
+                    this.sound.stop();
+                    this.freezeCheck++;
+                    this.sound = game.add.audio(odeToJoy[this.noteCounter]);
+                    this.sound.volume = 0.5;
+                    this.sound.play();
+                    this.noteCounter++;
+                    if (this.noteCounter === odeToJoy.length) {
+                        this.noteCounter = 0;
+                    }
+                    //console.log(this.freezeCheck);
+                    this.currentTile++;
+                    this.counter = 0;
+                    this.tileSpeed = 17;
+                    this.blackTiles.forEach(this.search, this, true);
+                    var grayTile;
+                    grayTile = game.add.sprite(this.control.x, this.control.y, 'grayTile');
+                    this.grayTiles.add(grayTile);
+                    for (j = 0; j < xrec; j++) {
+                        var rectangle = game.add.graphics(j * 100, this.vertical - 170);
+                        rectangle.beginFill(0xffffff);
+                        rectangle.lineStyle(0.5, 0x000000, 1);
+                        rectangle.moveTo(0, 0);
+                        rectangle.lineTo(100, 0);
+                        rectangle.lineTo(100, 170);
+                        rectangle.lineTo(0, 170);
+                        rectangle.endFill();
+                        this.whiteTiles.add(rectangle);
+                    }
+                    var rand = Math.floor(Math.random() * 4),
+                        blackRectangle = game.add.graphics(rand * 100, this.vertical - 170);
+                    blackRectangle.beginFill(0x000000);
+                    blackRectangle.lineStyle(0.5, 0x000000, 1);
+                    blackRectangle.moveTo(0, 0);
+                    blackRectangle.lineTo(100, 0);
+                    blackRectangle.lineTo(100, 170);
+                    blackRectangle.lineTo(0, 170);
+                    blackRectangle.endFill();
+                    this.blackTiles.add(blackRectangle);
+                    this.redTiles.forEach(this.redTileMove, this, true);
+                    this.control.x = this.horizontal;
+                    this.control.y -= 170;
                 }
-                //console.log(this.freezeCheck);
-                this.currentTile++;
-                this.counter = 0;
-                this.tileSpeed = 17;
-                this.blackTiles.forEach(this.search, this, true);
-
-                for (j = 0; j < xrec; j++) {
-                    var rectangle = game.add.graphics(j * 100, this.vertical - 170);
-                    rectangle.beginFill(0xffffff);
-                    rectangle.lineStyle(0.5, 0x000000, 1);
-                    rectangle.moveTo(0, 0);
-                    rectangle.lineTo(100, 0);
-                    rectangle.lineTo(100, 170);
-                    rectangle.lineTo(0, 170);
-                    rectangle.endFill();
-                    this.whiteTiles.add(rectangle);
-                }
-                var rand = Math.floor(Math.random() * 4),
-                    blackRectangle = game.add.graphics(rand * 100, this.vertical - 170);
-                blackRectangle.beginFill(0x000000);
-                blackRectangle.lineStyle(0.5, 0x000000, 1);
-                blackRectangle.moveTo(0, 0);
-                blackRectangle.lineTo(100, 0);
-                blackRectangle.lineTo(100, 170);
-                blackRectangle.lineTo(0, 170);
-                blackRectangle.endFill();
-                this.blackTiles.add(blackRectangle);
-
-                this.lose.y -= 170;
-                this.control.x = this.horizontal;
-                this.control.y -= 170;
+            },
+            redTileMove: function (tile) {
+                tile.y -= 170;
             },
             search: function (tile) {
                 this.vertical = tile.y;
@@ -173,8 +208,29 @@
 
                 this.counter++;
             },
-            taplose: function () {
-                console.log('game over');
+            taplose1: function () {
+                if (!this.game_over) {
+                    this.redTile1.alpha = 1;
+                    this.gameOver();
+                }
+            },
+            taplose2: function () {
+                if (!this.game_over) {
+                    this.redTile2.alpha = 1;
+                    this.gameOver();
+                }
+            },
+            taplose3: function () {
+                if (!this.game_over) {
+                    this.redTile3.alpha = 1;
+                    this.gameOver();
+                }
+            },
+            taplose4: function () {
+                if (!this.game_over) {
+                    this.redTile4.alpha = 1;
+                    this.gameOver();
+                }
             },
             freeze: function (tile) {
                 if (tile.y === game.height) {
@@ -188,6 +244,7 @@
                     //console.log(this.freezeCheck);
                     if (this.freezeCheck === 0) {
                         this.tileSpeed = 0;
+                        this.isFreezed = true;
                     }
                 }
             },
@@ -205,7 +262,10 @@
                     tile.destroy();
                 }
             },
-
+            gameOver: function () {
+                this.false.play();
+                this.game_over = true;
+            }
         };
         game = new Phaser.Game(400, 680, Phaser.CANVAS, 'gameDiv');
         game.state.add('mainstate', mainState);
