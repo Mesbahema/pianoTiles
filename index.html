@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>pianoTiles</title>
+    <title>pianoTilesClassic1</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.3/custom/phaser-arcade-physics.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -50,22 +50,95 @@
                 'E4', 'E4', 'F4', 'G4',
                 'G4', 'F4', 'E4', 'D4',
                 'C4', 'C4', 'D4', 'E4',
-                'D4', 'C4', 'C4'];
+                'D4', 'C4', 'C4'],
+            forElise = ['E5', 'D5#',
+                'E5', 'D5#', 'E5', 'B4', 'C5',
+                'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
+                'B4E2', 'E3', 'G3#',
+                'E4','G4#', 'B4', 'C5A2', 'E3', 'A3',
+                'E4', 'E5', 'D5#',
+                'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
+                'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
+                'B4E2', 'E3', 'G3#', 'E4','C5', 'B4',
+                'A2A4', 'E3', 'A3', 'E5', 'D5#',
+                'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
+                'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
+                'B4E2', 'E3', 'G3#', 'E4', 'G4#', 'B4',
+                'C5A2', 'E3', 'A3', 'E4', 'E5', 'D5#',
+                'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
+                'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
+                'B4E2', 'E3', 'G3#', 'E4', 'C5', 'B4',
+                'A2A4', 'E3', 'A3', 'B4', 'C5', 'D5',
+                'E5C3', 'G3', 'C4', 'G4', 'F5', 'E5',
+                'D5G2', 'G3', 'B3', 'F4', 'E5', 'D5',
+                'C5A2', 'E3', 'A3', 'E4', 'D5', 'C5',
+                'B4E2', 'E3', 'E4', 'E4', 'E5', 'E4',
+                'E5', 'E5', 'E6', 'D5#', 'E5', 'D5#', 
+                'E5','D5#', 'E5', 'D5#', 'E5', 'D5#',
+                'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
+                'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
+                'B4E2', 'E3', 'G3#', 'E4', 'G4#', 'B4',
+                'C5A2', 'E3', 'A3', 'E4', 'E5', 'D5#',
+                'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
+                'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
+                'B4E2', 'E3', 'G3#', 'E4', 'C5', 'B4',
+                'A2A4', 'E3', 'A3', 'B4', 'C5', 'D5',
+                'E5C3', 'G3', 'C4', 'G4', 'F5', 'E5', 
+                'D5G2', 'G3', 'B3', 'F4', 'E5', 'D5',
+                'C5A2', 'E3', 'A3', 'E4', 'D5', 'C5',
+                'B4E2', 'E3', 'E4', 'E4', 'E5',  'E4',
+                'E5', 'E5', 'E6', 'D5#', 'E5','D5#',
+                'E5', 'D5#', 'E5', 'D5#', 'E5', 'D5#',
+                'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
+                'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
+                'B4E2', 'E3', 'G3#', 'E4', 'G4#', 'B4',
+                'C5A2', 'E3', 'A3', 'E4', 'E5', 'D5#',
+                'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
+                'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
+                'B4E2', 'E3', 'G3#', 'D5', 'C5', 'B4',
+                'A1A2C4A4' 
+
+            ]
+
         var mainState = {
             preload: function () {
                 game.load.image('tile', 'tile.png');
                 game.load.image('grayTile', 'grayTile.png');
                 game.load.image('redTile', 'redTile.png');
                 game.load.audio('false', 'false.ogg');
+                game.load.audio('A2', 'A2.ogg');
+                game.load.audio('A2A4', 'A2A4.ogg');
+                game.load.audio('A3', 'A3.ogg');
+                game.load.audio('A4', 'A4.ogg');
+                game.load.audio('B2E4', 'B2E4.ogg');
+                game.load.audio('B4', 'B4.ogg');
+                game.load.audio('B4E2', 'B4E2.ogg');
                 game.load.audio('C4', 'C4.ogg');
+                game.load.audio('C5', 'C5.ogg');
+                game.load.audio('C5A2', 'C5A2.ogg');
                 game.load.audio('D4', 'D4.ogg');
+                game.load.audio('D5', 'D5.ogg');
+                game.load.audio('D5#', 'D5s.ogg');
+                game.load.audio('E2', 'E2.ogg');
+                game.load.audio('E3', 'E3.ogg');
                 game.load.audio('E4', 'E4.ogg');
+                game.load.audio('E5', 'E5.ogg');
                 game.load.audio('F4', 'F4.ogg');
+                game.load.audio('G3#', 'G3s.ogg');
                 game.load.audio('G4', 'G4.ogg');
-
+                game.load.audio('G4#', 'G4s.ogg');
+                game.load.audio('E5C3', 'E5C3.ogg');
+                game.load.audio('G3', 'G3.ogg');
+                game.load.audio('F5', 'F5.ogg');
+                game.load.audio('D5G2', 'D5G2.ogg');
+                game.load.audio('B3', 'B3.ogg');
+                game.load.audio('F3', 'F3.ogg');
+                game.load.audio('E6', 'E6.ogg');
+                game.load.audio('A1A2C4A4', 'A1A2C4A4.ogg');
             },
 
             create: function () {
+                this.modenum = 1000;
                 this.randomArray = [0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009];
                 this.game_over = false;
                 this.isStarted = false;
@@ -183,11 +256,11 @@
                     this.isStarted = true;
                     this.sound.stop();
                     this.freezeCheck++;
-                    this.sound = game.add.audio(odeToJoy[this.noteCounter]);
+                    this.sound = game.add.audio(forElise[this.noteCounter]);
                     this.sound.volume = 0.5;
                     this.sound.play();
                     this.noteCounter++;
-                    if (this.noteCounter === odeToJoy.length) {
+                    if (this.noteCounter === forElise.length) {
                         this.noteCounter = 0;
                     }
                     this.currentTile++;
@@ -198,7 +271,7 @@
                     var grayTile;
                     grayTile = game.add.sprite(this.control.x, this.control.y, 'grayTile');
                     this.grayTiles.add(grayTile);
-                    if (this.countTile <= 25) {
+                    if (this.countTile <= this.modenum) {
                         for (j = 0; j < xrec; j++) {
                             var rectangle = game.add.graphics(j * 100, this.vertical - 170);
                             rectangle.beginFill(0xffffff);
@@ -270,11 +343,10 @@
                             this.isFreezed = true;
                         }
                     }
-                    console.log(this.freezeCheck);
                     if (this.freezeCheck === 0) {
                         this.tileSpeed = 0;
                         //this.isFreezed = true;
-                        if (this.countTile === 29) {
+                        if (this.countTile === this.modenum + 4) {
                             this.Success();
 
                         }
@@ -296,9 +368,9 @@
                 }
             },
             gameOver: function () {
-                this.false.play();
-                this.sound.destroy();
-                this.game_over = true;
+                // this.false.play();
+                // this.sound.destroy();
+                // this.game_over = true;
             },
             Success: function () {
                 this.game_over = true;
