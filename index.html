@@ -29,7 +29,11 @@
 
 <body>
     <script>
-        var xrec = 4,
+        var width = window.innerWidth,
+            height = window.innerHeight,
+            scaleW,
+            scaleH,
+            xrec = 4,
             yrec = 4,
             odeToJoy = ['E4', 'E4', 'F4', 'G4',
                 'G4', 'F4', 'E4', 'D4',
@@ -55,11 +59,11 @@
                 'E5', 'D5#', 'E5', 'B4', 'C5',
                 'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
                 'B4E2', 'E3', 'G3#',
-                'E4','G4#', 'B4', 'C5A2', 'E3', 'A3',
+                'E4', 'G4#', 'B4', 'C5A2', 'E3', 'A3',
                 'E4', 'E5', 'D5#',
                 'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
                 'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
-                'B4E2', 'E3', 'G3#', 'E4','C5', 'B4',
+                'B4E2', 'E3', 'G3#', 'E4', 'C5', 'B4',
                 'A2A4', 'E3', 'A3', 'E5', 'D5#',
                 'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
                 'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
@@ -73,8 +77,8 @@
                 'D5G2', 'G3', 'B3', 'F4', 'E5', 'D5',
                 'C5A2', 'E3', 'A3', 'E4', 'D5', 'C5',
                 'B4E2', 'E3', 'E4', 'E4', 'E5', 'E4',
-                'E5', 'E5', 'E6', 'D5#', 'E5', 'D5#', 
-                'E5','D5#', 'E5', 'D5#', 'E5', 'D5#',
+                'E5', 'E5', 'E6', 'D5#', 'E5', 'D5#',
+                'E5', 'D5#', 'E5', 'D5#', 'E5', 'D5#',
                 'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
                 'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
                 'B4E2', 'E3', 'G3#', 'E4', 'G4#', 'B4',
@@ -83,11 +87,11 @@
                 'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
                 'B4E2', 'E3', 'G3#', 'E4', 'C5', 'B4',
                 'A2A4', 'E3', 'A3', 'B4', 'C5', 'D5',
-                'E5C3', 'G3', 'C4', 'G4', 'F5', 'E5', 
+                'E5C3', 'G3', 'C4', 'G4', 'F5', 'E5',
                 'D5G2', 'G3', 'B3', 'F4', 'E5', 'D5',
                 'C5A2', 'E3', 'A3', 'E4', 'D5', 'C5',
-                'B4E2', 'E3', 'E4', 'E4', 'E5',  'E4',
-                'E5', 'E5', 'E6', 'D5#', 'E5','D5#',
+                'B4E2', 'E3', 'E4', 'E4', 'E5', 'E4',
+                'E5', 'E5', 'E6', 'D5#', 'E5', 'D5#',
                 'E5', 'D5#', 'E5', 'D5#', 'E5', 'D5#',
                 'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
                 'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
@@ -96,10 +100,18 @@
                 'E5', 'D5#', 'E5', 'B4', 'D5', 'C5',
                 'A2A4', 'E3', 'A3', 'C4', 'E4', 'A4',
                 'B4E2', 'E3', 'G3#', 'D5', 'C5', 'B4',
-                'A1A2C4A4' 
-
-            ]
-
+                'A1A2C4A4'
+            ];
+        if (width < 400) {
+            scaleW = width / 400;
+        } else {
+            scaleW = 1;
+        }
+        if (height < 680) {
+            scaleH = height / 680;
+        } else {
+            scaleH = 1;
+        }
         var mainState = {
             preload: function () {
                 game.load.image('tile', 'tile.png');
@@ -138,7 +150,9 @@
             },
 
             create: function () {
-                this.modenum = 1000;
+                console.log(forElise.length);
+                this.modenum = forElise.length + 2;
+                //this.modenum = 10;
                 this.randomArray = [0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009];
                 this.game_over = false;
                 this.isStarted = false;
@@ -147,6 +161,7 @@
                 this.time = 0;
                 this.start = false;
                 this.vertical = 0;
+                this.grayTileY = 510;
                 this.background = game.add.graphics(0, 0);
                 this.background.beginFill(0x08fb03);
                 //this.background.lineStyle(0.5, 0x000000, 1);
@@ -156,6 +171,7 @@
                 this.background.lineTo(0, 680);
                 this.background.endFill();
                 this.whiteTiles = game.add.group();
+                this.redTilesR = game.add.group();
                 this.redTiles = game.add.group();
                 this.blackTiles = game.add.group();
                 this.grayTiles = game.add.group();
@@ -209,25 +225,53 @@
                     blackRectangle.endFill();
                     this.blackTiles.add(blackRectangle);
                     if (i === 3) {
-                        this.control = game.add.button(rand * 100, 510, 'tile', this.tap, this, 6, 4, 6, 4);
+                        this.control = game.add.button(rand * 100 * scaleW, 510 * scaleH, 'tile', this.empty, this, 6, 4, 6, 4);
                     }
                     this.noteCounter = 0;
                 }
-                this.redTile1 = game.add.button(0, 510, 'redTile', this.taplose1, this, 6, 4, 6, 4);
-                this.redTile2 = game.add.button(100, 510, 'redTile', this.taplose2, this, 6, 4, 6, 4);
-                this.redTile3 = game.add.button(200, 510, 'redTile', this.taplose3, this, 6, 4, 6, 4);
-                this.redTile4 = game.add.button(300, 510, 'redTile', this.taplose4, this, 6, 4, 6, 4);
+                this.control.onInputDown.add(this.tap, this);
+                this.redTile1R = game.add.button(0 * scaleW, 510 * scaleH, 'redTile', this.empty, this, 6, 4, 6, 4);
+                this.redTile1 = game.add.sprite(0, 510, 'redTile');
+                this.redTile2R = game.add.button(100 * scaleW, 510 * scaleH, 'redTile', this.empty, this, 6, 4, 6, 4);
+                this.redTile2 = game.add.sprite(100, 510, 'redTile');
+                this.redTile3R = game.add.button(200 * scaleW, 510 * scaleH, 'redTile', this.empty, this, 6, 4, 6, 4);
+                this.redTile3 = game.add.sprite(200, 510, 'redTile');
+                this.redTile4R = game.add.button(300 * scaleW, 510 * scaleH, 'redTile', this.empty, this, 6, 4, 6, 4);
+                this.redTile4 = game.add.sprite(300, 510, 'redTile');
+                this.redTile1R.scale.setTo(scaleW,scaleH);
+                this.redTile2R.scale.setTo(scaleW,scaleH);
+                this.redTile3R.scale.setTo(scaleW,scaleH);
+                this.redTile4R.scale.setTo(scaleW,scaleH);
+                this.redTile1R.onInputDown.add(this.taplose1, this);
+                this.redTile2R.onInputDown.add(this.taplose2, this);
+                this.redTile3R.onInputDown.add(this.taplose3, this);
+                this.redTile4R.onInputDown.add(this.taplose4, this);
+                this.redTilesR.add(this.redTile1R);
+                this.redTilesR.add(this.redTile2R);
+                this.redTilesR.add(this.redTile3R);
+                this.redTilesR.add(this.redTile4R);
                 this.redTiles.add(this.redTile1);
                 this.redTiles.add(this.redTile2);
                 this.redTiles.add(this.redTile3);
                 this.redTiles.add(this.redTile4);
+                this.redTile1R.alpha = 0;
+                this.redTile2R.alpha = 0;
+                this.redTile3R.alpha = 0;
+                this.redTile4R.alpha = 0;
                 this.redTile1.alpha = 0;
                 this.redTile2.alpha = 0;
                 this.redTile3.alpha = 0;
                 this.redTile4.alpha = 0;
+                this.control.scale.setTo(scaleW, scaleH);
                 this.control.alpha = 0;
             },
+            empty: function() {
+
+            },
             update: function () {
+                var canvas = game.canvas;
+                canvas.style.width = (400 * scaleW) + 'px';
+                canvas.style.height = (680 * scaleH) + 'px';
                 if (!this.game_over) {
                     if (this.isStarted) {
                         this.time += 0.0166666666666;
@@ -237,9 +281,11 @@
                         }
                         this.timeText.text = this.time + '"';
                     }
+                    this.grayTileY += this.tileSpeed;
                     this.interval += 1;
                     this.whiteTiles.forEach(this.setSpeed, this, true);
                     this.blackTiles.forEach(this.setSpeed, this, true);
+                    this.redTilesR.forEach(this.setSpeed, this, true);
                     this.redTiles.forEach(this.setSpeed, this, true);
                     this.grayTiles.forEach(this.setSpeed, this, true);
                     this.whiteTiles.forEach(this.checkWhiteTile, this, true);
@@ -269,8 +315,9 @@
                     this.blackTiles.forEach(this.search, this, true);
                     this.countTile++;
                     var grayTile;
-                    grayTile = game.add.sprite(this.control.x, this.control.y, 'grayTile');
+                    grayTile = game.add.sprite(this.control.x/scaleW, this.grayTileY, 'grayTile');
                     this.grayTiles.add(grayTile);
+                    this.grayTileY -= 170;
                     if (this.countTile <= this.modenum) {
                         for (j = 0; j < xrec; j++) {
                             var rectangle = game.add.graphics(j * 100, this.vertical - 170);
@@ -294,9 +341,11 @@
                         blackRectangle.endFill();
                         this.blackTiles.add(blackRectangle);
                     }
+                    this.redTilesR.forEach(this.redTileMove, this, true);
                     this.redTiles.forEach(this.redTileMove, this, true);
-                    this.control.x = this.horizontal;
+                    this.control.x = this.horizontal * scaleW;
                     this.control.y -= 170;
+
                 }
             },
             redTileMove: function (tile) {
@@ -380,10 +429,10 @@
                 this.whiteTiles.forEach(this.moveTile, this, true);
                 this.blackTiles.forEach(this.moveTile, this, true);
                 this.grayTiles.forEach(this.moveTile, this, true);
-                this.redTiles.forEach(this.moveTile, this, true);              
+                this.redTiles.forEach(this.moveTile, this, true);
                 this.sound.destroy();
             },
-            moveTile: function(tile) {
+            moveTile: function (tile) {
                 tile.y += 1700;
             },
         };
