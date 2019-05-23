@@ -117,6 +117,7 @@
                 game.load.image('tile', 'tile.png');
                 game.load.image('grayTile', 'grayTile.png');
                 game.load.image('redTile', 'redTile.png');
+                game.load.image('restart', 'restart.png');
                 game.load.audio('false', 'false.ogg');
                 game.load.audio('A2', 'A2.ogg');
                 game.load.audio('A2A4', 'A2A4.ogg');
@@ -185,6 +186,7 @@
                     font: "80px iran_sans",
                     fill: "#000000"
                 });
+
                 this.finalTime.anchor.setTo(0.5, 0.5);
                 //this.finalTime.text = '0.000"';
                 this.finalTime.visible = false;
@@ -226,6 +228,11 @@
                     this.blackTiles.add(blackRectangle);
                     if (i === 3) {
                         this.control = game.add.button(rand * 100 * scaleW, 510 * scaleH, 'tile', this.empty, this, 6, 4, 6, 4);
+                        this.startText = game.add.text(rand * 100 + 50, 595, "START", {
+                            font: "30px iran_sans",
+                            fill: "#ffffff"
+                        });
+                        this.startText.anchor.setTo(0.5, 0.5);
                     }
                     this.noteCounter = 0;
                 }
@@ -238,10 +245,10 @@
                 this.redTile3 = game.add.sprite(200, 510, 'redTile');
                 this.redTile4R = game.add.button(300 * scaleW, 510 * scaleH, 'redTile', this.empty, this, 6, 4, 6, 4);
                 this.redTile4 = game.add.sprite(300, 510, 'redTile');
-                this.redTile1R.scale.setTo(scaleW,scaleH);
-                this.redTile2R.scale.setTo(scaleW,scaleH);
-                this.redTile3R.scale.setTo(scaleW,scaleH);
-                this.redTile4R.scale.setTo(scaleW,scaleH);
+                this.redTile1R.scale.setTo(scaleW, scaleH);
+                this.redTile2R.scale.setTo(scaleW, scaleH);
+                this.redTile3R.scale.setTo(scaleW, scaleH);
+                this.redTile4R.scale.setTo(scaleW, scaleH);
                 this.redTile1R.onInputDown.add(this.taplose1, this);
                 this.redTile2R.onInputDown.add(this.taplose2, this);
                 this.redTile3R.onInputDown.add(this.taplose3, this);
@@ -265,7 +272,7 @@
                 this.control.scale.setTo(scaleW, scaleH);
                 this.control.alpha = 0;
             },
-            empty: function() {
+            empty: function () {
 
             },
             update: function () {
@@ -300,6 +307,7 @@
             tap: function () {
                 if (!this.game_over) {
                     this.isStarted = true;
+                    this.startText.visible = false;
                     this.sound.stop();
                     this.freezeCheck++;
                     this.sound = game.add.audio(forElise[this.noteCounter]);
@@ -315,7 +323,7 @@
                     this.blackTiles.forEach(this.search, this, true);
                     this.countTile++;
                     var grayTile;
-                    grayTile = game.add.sprite(this.control.x/scaleW, this.grayTileY, 'grayTile');
+                    grayTile = game.add.sprite(this.control.x / scaleW, this.grayTileY, 'grayTile');
                     this.grayTiles.add(grayTile);
                     this.grayTileY -= 170;
                     if (this.countTile <= this.modenum) {
@@ -417,10 +425,29 @@
                 }
             },
             gameOver: function () {
-                // this.false.play();
-                // this.sound.destroy();
-                // this.game_over = true;
+                this.false.play();
+                this.sound.destroy();
+                this.game_over = true;
+                this.gameOverBG = game.add.graphics(0, 0);
+                this.gameOverBG.beginFill(0xffffff);
+                this.gameOverBG.moveTo(0, 0);
+                this.gameOverBG.lineTo(400, 0);
+                this.gameOverBG.lineTo(400, 680);
+                this.gameOverBG.lineTo(0, 680);
+                this.gameOverBG.endFill();
+                this.gameOverBG.alpha = 0.5;
+                this.restartButtonR = game.add.button(200 * scaleW, 320 * scaleH, 'restart', this.Restart, this, 6, 4, 6, 4);
+                this.restartButtonR.anchor.setTo(0.5, 0.5);
+                this.restartButtonR.scale.setTo(scaleW, scaleH);
+                this.restartButtonR.alpha = 0;
+                this.restartButton = game.add.sprite(200, 320, 'restart');
+                this.restartButton.anchor.setTo(0.5, 0.5);
             },
+
+            Restart: function () {
+                game.state.start('mainstate');
+            },
+
             Success: function () {
                 this.game_over = true;
                 this.timeText.visible = false;
@@ -430,7 +457,7 @@
                 this.blackTiles.forEach(this.moveTile, this, true);
                 this.grayTiles.forEach(this.moveTile, this, true);
                 this.redTiles.forEach(this.moveTile, this, true);
-                this.sound.destroy();
+                //this.sound.destroy();
             },
             moveTile: function (tile) {
                 tile.y += 1700;
